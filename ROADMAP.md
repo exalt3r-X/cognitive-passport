@@ -9,9 +9,7 @@ ask for the same thing, that's the signal to build it. Open an
 - Passport JSON contract + JSON Schema (`spec/passport.schema.json`)
 - Human-readable spec with honesty rules (`spec/SPEC.md`)
 - **Fail-closed** trust-gate examples (curl / JS / Python)
-- Offline example + dependency-free validator (`node tests/validate.mjs`)
-  <!-- CI runner (.github/workflows/ci.yml) is written but not yet enabled on GitHub —
-       pending a token with the `workflow` scope. Run locally in the meantime. -->
+- Offline example + dependency-free validator (`node tests/validate.mjs`), run in CI on every push/PR
 - Live reference implementation (metainsight.app/passport)
 
 ## P1 — make it a *verifiable* passport (v0.2)
