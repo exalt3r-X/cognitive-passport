@@ -108,8 +108,19 @@ stable. If you build agent systems, one question is worth more to us than any st
 
 Open an [issue](../../issues) — a blunt answer is the most useful kind — or say what you're
 building in [💬 Discussions](../../discussions/3). The sharp edge right now is the
-[Execution Receipt](../../issues/2), where builders are working out how to gate a *single*
-action, not just long-run reputation.
+[Decision Receipt](../../issues/2), where builders are working out how to gate a *single*
+action, not just long-run reputation. Start with the one-pager:
+[**Why Passport is not enough**](./docs/why-passport-is-not-enough.md) — it ends with the
+one question we actually need answered.
+
+### Early reviewers
+
+The design is being shaped by field input from people shipping real agents — not by votes.
+First reviewers, with our thanks: [@clementineCU](https://github.com/clementineCU)
+(field-level gate spec for market/voyage agents, #1 #2) and
+[@impeachmentright](https://github.com/impeachmentright) (settle boundary / execution
+digest, live A2A contractor, #2). If you ship agents and want to poke holes in the next
+document before it hardens — answer the one-pager's closing question and you're in.
 
 ## License
 
