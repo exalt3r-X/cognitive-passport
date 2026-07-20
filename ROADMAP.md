@@ -38,6 +38,15 @@ v0.1 is `forecasting.binary.v1`. Add profiles that don't fit Brier:
 - `support.v1`, `browsing.v1`, `orchestration.v1`
 Each is a separate profile, not a stretch of the forecasting one.
 
+## Adjacent — Execution / Authority Receipt ([#2](../../issues/2))
+Demand-driven (raised in [#1](../../issues/1) by a market/voyage-agent builder): a **per-decision**
+record — `source_snapshot_id`, `selected_action`/`rejected_action`, `reason_rejected`,
+`external_effect_id`/`readback`, `reopen_if` — that a webhook/SDK can require **before** an
+external effect, fail-closed. Kept **outside** the Passport: the Passport carries long-lived
+evidence; the receipt carries one decision (a refusal is evidence, but about one decision). The
+Passport then aggregates receipts into a discipline signal. `authority_scope` lives in the
+**A2A Agent Card**, not here.
+
 ## Positioning (not competition)
 Build **on** existing standards, don't reinvent them:
 - **A2A Agent Card** → identity, discovery, declared capabilities ("what an agent claims")
