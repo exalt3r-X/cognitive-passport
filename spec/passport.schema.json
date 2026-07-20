@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://metainsight.app/spec/cognitive-passport/v0.1/passport.schema.json",
+  "title": "Cognitive Passport",
+  "description": "A verifiable, outcome-grounded trust record for an autonomous agent. Not a rating — a history of commitments made before outcomes were known, resolved by reality.",
+  "type": "object",
+  "required": ["agent", "slug", "sample_size", "edge_proven", "verified"],
+  "properties": {
+    "agent": { "type": "string", "description": "Human-readable agent name." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Stable machine identifier for the agent." },
+    "role": { "type": "string", "description": "What the agent is / does." },
+
+    "calibration": {
+      "type": ["number", "null"],
+      "minimum": 0, "maximum": 1,
+      "description": "Mean Brier score over resolved binary commitments (lower = better). Null if no resolved sample."
+    },
+    "calibration_oos": {
+      "type": ["number", "null"],
+      "description": "Out-of-sample calibration (resolved AFTER any model/weight freeze), to guard against overfit."
+    },
+    "bias": {
+      "type": ["number", "null"],
+      "description": "Mean(predicted probability - outcome). ~0 = well-calibrated; positive = overconfident on 'yes'."
+    },
+
+    "sample_size": { "type": "integer", "minimum": 0, "description": "Number of forecasts/commitments in the sample." },
+    "resolved_forecasts": { "type": "integer", "minimum": 0, "description": "How many have been resolved by reality." },
+    "period": {
+      "type": "array",
+      "description": "[from, to] ISO dates spanning the resolved sample.",
+      "items": { "type": ["string", "null"] },
+      "minItems": 2, "maxItems": 2
+    },
+
+    "domains": {
+      "type": "array",
+      "description": "Per-domain competence. Good in one domain does NOT transfer to another.",
+      "items": {
+        "type": "object",
+        "required": ["domain", "n", "brier"],
+        "properties": {
+          "domain": { "type": "string" },
+          "n": { "type": "integer", "minimum": 0 },
+          "brier": { "type": ["number", "null"] }
+        }
+      }
+    },
+
+    "baseline": {
+      "type": ["number", "null"],
+      "description": "Baseline Brier the agent is compared against (e.g. the market price). Null when no external baseline exists (e.g. open questions without a price)."
+    },
+    "baseline_note": { "type": "string", "description": "Why the baseline is what it is (or absent)." },
+
+    "real_money": { "type": "boolean", "description": "Whether commitments carried real financial stake (vs paper)." },
+    "event_correlation": {
+      "type": "string",
+      "description": "Honest note on independence: correlated events (e.g. many bets on one match) inflate an apparent sample."
+    },
+
+    "edge_proven": {
+      "type": ["boolean", "null"],
+      "description": "The key field for a trust gate. false = not proven (small sample OR below baseline). true = demonstrated. null = ahead on current sample but not yet statistically confirmed. NEVER true on a small sample."
+    },
+    "verified": {
+      "type": "boolean",
+      "description": "Independent verification against a defined criterion. An internal label is NOT verification — this stays false until an external criterion is met."
+    },
+
+    "committed_open": { "type": ["integer", "null"], "description": "Commitments made and locked, still awaiting resolution (audit trail of things on the record but not yet judged)." },
+    "updated": { "type": "string", "format": "date-time", "description": "When this passport view was generated." }
+  },
+
+  "$defs": {
+    "real_money_track": {
+      "type": "object",
+      "description": "A SEPARATE sample from forecast calibration — do not equate them. Small money-sample ≠ proven edge.",
+      "properties": {
+        "wins": { "type": "integer" },
+        "n": { "type": "integer" },
+        "realized_usd": { "type": "number" },
+        "period": { "type": "string" },
+        "correlation": { "type": "string" },
+        "bets": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "paper_track": {
+      "type": "object",
+      "description": "Paper (no-stake) track kept separate from real-money, to measure strategy without micro-bankroll noise.",
+      "properties": {
+        "n": { "type": "integer" },
+        "brier": { "type": ["number", "null"] },
+        "brier_market": { "type": ["number", "null"] },
+        "beat": { "type": "integer" }
+      }
+    }
+  }
+}
