@@ -1,0 +1,18 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Dependency-free: checks the schema, the example, and that the
+      # trust-gate examples actually fail closed. See tests/validate.mjs.
+      - run: node tests/validate.mjs
