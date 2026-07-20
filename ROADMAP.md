@@ -54,6 +54,11 @@ gates the spec: [docs/why-passport-is-not-enough.md](./docs/why-passport-is-not-
 authority, Passport = proven history, Receipt = one decision. A field that wants to live in
 two boxes is a design smell. No Passport++.
 
+**Docs freeze (self-imposed):** no new specification document until the existing ones have
+produced at least 5 independent field conversations — and the current goal is not a document
+at all: it is the **first independent integration attempt** (someone wiring the gate in front
+of their own agent, even if they then bounce off a limitation — the bounce is the data).
+
 ## Positioning (not competition)
 Build **on** existing standards, don't reinvent them:
 - **A2A Agent Card** → identity, discovery, declared capabilities ("what an agent claims")
