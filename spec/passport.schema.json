@@ -4,11 +4,22 @@
   "title": "Cognitive Passport",
   "description": "A verifiable, outcome-grounded trust record for an autonomous agent. Not a rating — a history of commitments made before outcomes were known, resolved by reality.",
   "type": "object",
-  "required": ["agent", "slug", "sample_size", "edge_proven", "verified"],
+  "required": ["spec_version", "profile", "agent", "slug", "resolved_forecasts", "edge_proven", "verified"],
   "properties": {
+    "spec_version": { "type": "string", "description": "Version of this specification the document conforms to, e.g. \"0.1\".", "examples": ["0.1"] },
+    "profile": { "type": "string", "description": "Which agent-competence profile this passport uses. v0.1 defines only binary forecasting.", "examples": ["forecasting.binary.v1"] },
     "agent": { "type": "string", "description": "Human-readable agent name." },
     "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Stable machine identifier for the agent." },
     "role": { "type": "string", "description": "What the agent is / does." },
+    "subject": {
+      "type": "object",
+      "description": "Precise identity of the scored configuration — so a new model/prompt/tooling doesn't inherit an old version's record.",
+      "properties": {
+        "id": { "type": "string", "description": "Stable URI for the agent." },
+        "agent_version": { "type": "string" },
+        "configuration_hash": { "type": "string", "description": "e.g. sha256:… over model+prompt+tools+weights." }
+      }
+    },
 
     "calibration": {
       "type": ["number", "null"],
@@ -69,6 +80,8 @@
     },
 
     "committed_open": { "type": ["integer", "null"], "description": "Commitments made and locked, still awaiting resolution (audit trail of things on the record but not yet judged)." },
+    "real_money_track": { "$ref": "#/$defs/real_money_track" },
+    "paper_track": { "$ref": "#/$defs/paper_track" },
     "updated": { "type": "string", "format": "date-time", "description": "When this passport view was generated." }
   },
 

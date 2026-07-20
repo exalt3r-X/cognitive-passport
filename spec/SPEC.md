@@ -60,31 +60,55 @@ These are what separate a passport from a marketing page. A conforming implement
    different populations; a passport MUST NOT visually equate `Brier 0.149 (n=23 forecasts)`
    with `3/3 money bets`.
 4. **MUST** surface failures. A passport that only shows wins is non-conforming.
-5. **MUST** keep four entities separate and never conflate them:
-   - **intent** — what the reader/agent wants to do now
-   - **source** — the channel a visitor arrived through
-   - **ref / campaign** — who or what brought them
-   - **destination / path** — where they went
-6. **SHOULD** report what is missing (`"insufficient sample"`, `"no evidence"`,
+5. **SHOULD** report what is missing (`"insufficient sample"`, `"no evidence"`,
    `"awaiting resolution"`) rather than a fabricated zero or a silent gap.
 
-## 5. Trust gate
+## 5. Evidence vs Policy (important)
 
-The passport exists to be *acted on*. The minimal pattern (see `examples/`):
+A passport carries **evidence** — measurements and their provenance (metric, value, baseline,
+sample size, period, domain breakdown). Whether that evidence is *sufficient* to grant an
+authority is **policy**, and policy belongs to the **consumer**, not the passport.
+
+`edge_proven` is a convenience signal from the *issuer's* policy. It is deliberately
+conservative (see honesty rules) but it is not a universal truth — one issuer may call an
+edge proven at n=10, another at n=100. A high-stakes consumer SHOULD NOT rely on
+`edge_proven` alone; it SHOULD read the underlying measurements and apply its **own**
+thresholds (effect size, confidence interval, out-of-sample, correlation adjustment).
+
+> Roadmap (v0.2): move measurements into a structured, signed `evidence` object
+> (`{metric, value, baseline, delta, n_resolved, confidence_interval, methodology, out_of_sample}`)
+> so that `edge_proven` becomes a *derivable* provider opinion rather than the primary input.
+
+## 6. Trust gate — FAIL-CLOSED (normative)
+
+The passport exists to be *acted on*. The gate MUST deny unless the passport **positively**
+clears every check. Note `edge_proven` has three states — `true`, `false`, `null` (ahead but
+not statistically confirmed) — and **only `true` may allow**:
 
 ```
-p = get_passport(agent)
-deny if p.edge_proven is False
-deny if p.sample_size < min_sample
-deny if domain requested and agent has no track record in that domain
+p = get_passport(agent, base_url)
+deny if p.edge_proven != true                      # null AND false both deny (fail-closed)
+deny if p.resolved_forecasts < min_resolved        # resolved, not merely committed
+deny if domain requested and (no domain entry OR domain.n < min_resolved)
+deny if high_risk and p.verified != true           # money / code / permissions
 otherwise allow
 ```
 
+`min_resolved = 10` is a floor, not a proof — see §5; a serious consumer sets its own.
 Higher-stakes actions SHOULD combine the passport with additional controls: authority
-limits, an economic stake, and stronger verification. A passport is a necessary input to a
-delegation decision, not a sufficient one.
+limits, an economic stake, and stronger verification. A passport is a *necessary* input to a
+delegation decision, not a *sufficient* one.
 
-## 6. Versioning
+## 7. Scope of v0.1
 
-`v0.1` — initial draft. Additive changes stay within `v0.x`. The `$id` in the schema carries
-the version.
+v0.1 describes the **binary-forecasting** profile (`profile: "forecasting.binary.v1"`):
+outcomes resolve yes/no, calibration is Brier, the baseline is a price/consensus. It does
+**not** yet cover coding, research, browsing, support or orchestration agents — those need
+different metrics (task-success rate, human-override rate, critical-failure rate, unauthorized
+actions, citation correctness, rollback rate…). Those arrive as additional `profile`s, not by
+stretching this one. See [ROADMAP](../ROADMAP.md).
+
+## 8. Versioning
+
+Each passport carries a `spec_version`. v0.1 is an initial draft; additive changes stay
+within `v0.x`. The `$id` in the schema also carries the version.

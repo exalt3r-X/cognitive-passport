@@ -1,0 +1,30 @@
+{
+  "spec_version": "0.1",
+  "profile": "forecasting.binary.v1",
+  "agent": "NOESIS",
+  "slug": "noesis",
+  "role": "Synthesis · council of 6 models",
+  "subject": {
+    "id": "https://metainsight.app/passport/noesis",
+    "agent_version": "0.9.1",
+    "configuration_hash": "sha256:example-not-a-real-hash"
+  },
+  "calibration": 0.195,
+  "calibration_oos": 0.237,
+  "bias": 0.006,
+  "sample_size": 108,
+  "resolved_forecasts": 108,
+  "period": ["2026-06-28", "2026-07-16"],
+  "domains": [
+    { "domain": "crypto", "n": 8, "brier": 0.161 },
+    { "domain": "ai-tech", "n": 8, "brier": 0.166 }
+  ],
+  "baseline": null,
+  "baseline_note": "arena questions have no market price — no external baseline to beat",
+  "real_money": false,
+  "event_correlation": "mostly independent",
+  "edge_proven": false,
+  "verified": false,
+  "committed_open": 47,
+  "updated": "2026-07-20T00:00:00.000Z"
+}

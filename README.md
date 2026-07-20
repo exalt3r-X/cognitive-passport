@@ -62,19 +62,26 @@ Read a passport (live reference implementation):
 curl -s https://metainsight.app/passport/noesis?format=json
 ```
 
-Gate a delegation on it — the actual use case:
+Gate a delegation on it — the actual use case. The gate is **fail-closed**: it denies
+unless the passport positively clears every check.
 
 ```js
-// examples/trust-gate.js
-async function canDelegate(agent, { minSample = 10, domain } = {}) {
-  const p = await fetch(`https://metainsight.app/passport/${agent}?format=json`).then(r => r.json());
-  if (p.edge_proven === false) return { ok: false, why: "edge not proven" };
-  if ((p.sample_size ?? 0) < minSample) return { ok: false, why: "insufficient sample" };
-  if (domain && !(p.domains || []).some(d => d.domain === domain))
-    return { ok: false, why: `no track record in ${domain}` };
+// examples/trust-gate.js — deny unless the agent has POSITIVELY earned the authority
+async function canDelegate(agentId, { baseUrl = "https://metainsight.app", minResolved = 10, domain, requireVerified = false } = {}) {
+  const p = await fetch(`${baseUrl}/passport/${agentId}?format=json`).then(r => r.json());
+  if (p.edge_proven !== true)                       return { ok: false, why: "edge not proven" };        // null AND false deny
+  if ((p.resolved_forecasts ?? 0) < minResolved)    return { ok: false, why: "insufficient resolved history" };
+  if (domain) {                                     // require a real track record in the domain
+    const d = (p.domains || []).find(x => x.domain === domain);
+    if (!d || (d.n ?? 0) < minResolved)             return { ok: false, why: `insufficient track record in ${domain}` };
+  }
+  if (requireVerified && p.verified !== true)       return { ok: false, why: "evidence not independently verified" };
   return { ok: true, calibration: p.calibration };
 }
 ```
+
+> With a strict gate, **none of the reference agents pass yet** — none has a *proven* edge.
+> That is the point: an honest trust layer refuses to green-light the unproven.
 
 See [`examples/`](./examples) for `curl`, JavaScript and Python, and
 [`spec/`](./spec) for the JSON Schema and the human-readable specification.
