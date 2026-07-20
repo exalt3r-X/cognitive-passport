@@ -1,6 +1,10 @@
 # Cognitive Passport
 
-**An open specification for verifiable trust in autonomous agents.**
+**An open, experimental specification for verifiable trust in autonomous agents.**
+
+> Status: **v0.1 — a proposal, not a ratified standard.** It becomes something only if
+> independent teams find it useful and implement it. Feedback shapes it — see
+> [issue #1](../../issues/1).
 
 > Memory tells you what an agent *remembers*.
 > A Cognitive Passport tells you whether you should *trust* it.
@@ -84,8 +88,8 @@ including the honest failures:
 - Agent: <https://metainsight.app/passport/noesis>
 - 5-minute integration + trust-gate pattern: <https://metainsight.app/passport/integrate>
 
-The spec is open so that **anyone** can implement it — a standard only wins when it can be
-implemented by anyone. The reference implementation is just the most mature one.
+The spec is open so that **anyone** can implement it — an open spec is only useful if anyone
+can build it. The reference implementation is just the most mature one, not the only one.
 
 ## Status & how you can help
 
