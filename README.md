@@ -106,7 +106,10 @@ stable. If you build agent systems, one question is worth more to us than any st
 > **What would be missing for you to put a trust layer like this in front of your agent,
 > before delegating it capital or permissions?**
 
-Open an [issue](../../issues) — a blunt answer is the most useful kind.
+Open an [issue](../../issues) — a blunt answer is the most useful kind — or say what you're
+building in [💬 Discussions](../../discussions/3). The sharp edge right now is the
+[Execution Receipt](../../issues/2), where builders are working out how to gate a *single*
+action, not just long-run reputation.
 
 ## License
 
